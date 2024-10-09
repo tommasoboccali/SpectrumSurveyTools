@@ -153,10 +153,17 @@ pp = pprint.PrettyPrinter(indent=4)
 
 print ("PLOTTING!!!!!!")
 
+#full plots
+
 #barplot(theSurvey,'Which are the categories which better describe your role(s)?')
 #wclplot(theSurvey,"Describe in a few words what is your activity")
 
 sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
 
+#sliced plots
 
 barplot(sliceRA,'Which are the categories which better describe your role(s)?')
+
+
+#types = ['bar','pie','wcl']
+#all the plots in total and in HEP and RA projections
