@@ -138,9 +138,9 @@ print ("Finished reading the file, read  entries:"  + str(len(theSurvey)))
 
 # save it as json file
 import json
-with open('survey.json', 'w') as f:
-    json.dump(theSurvey, f)
-print ("Finished writing the file")
+#with open('survey.json', 'w') as f:
+#    json.dump(theSurvey, f)
+#print ("Finished writing the file")
 
 pp = pprint.PrettyPrinter(indent=4)
 #pp.pprint(theSurvey[0])
@@ -161,7 +161,7 @@ print ("PLOTTING!!!!!!")
 
 #sliced plots
 
-barplot(sliceRA,'Which are the categories which better describe your role(s)?')
+#barplot(sliceRA,'Which are the categories which better describe your role(s)?')
 
 
 #types = ['bar','pie','wcl']
