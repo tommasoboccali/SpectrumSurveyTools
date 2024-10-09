@@ -113,16 +113,12 @@ def wclplot(theSlicedSurvey, theString):
     return
 
 
-
-
-
-
 ###MAIN
 
 
 
 #test to read the very large csv file
-# note the file comes from the excel, after you have changed all the "," to a "+" and removed the first 4 lines
+# note the file comes from the excel, after you have changed all the "," to a "+" and removed the first 3 lines
 filename='/Users/tom/Downloads/Content_Export_SPECTRUM-JENA_Survey1_oct09/Export583072tab1CSV.csv'
 headerline=True
 theSurvey=[]
@@ -162,8 +158,16 @@ sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise 
 
 #sliced plots
 
-barplot(sliceRA,'Which are the categories which better describe your role(s)?')
+#barplot(sliceRA,'Which are the categories which better describe your role(s)?')
 
 
 #types = ['bar','pie','wcl']
 #all the plots in total and in HEP and RA projections
+
+fullPlots = ['Which are the categories which better describe your role(s)?','Describe in a few words what is your activity':"bar",
+             'Which is/are your scientific domain(s) of expertise (if applicable)?':"bar"
+             'Describe in a few words what is your activity':"wcl",
+             'On behalf of whom are you submitting the survey?':'pie',
+             'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
+
+
