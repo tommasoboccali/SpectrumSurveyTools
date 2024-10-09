@@ -24,6 +24,30 @@ def slicer(theSurvey, theQuestion, theAnswers):
 
 
 
+def histogram(theSlicedSurvey, theString):
+                
+        import matplotlib.pyplot as plt
+        import numpy as np
+    
+        # 1 - 'What is the team size (in number of collaborators) of the initiative?'
+    
+        stringQ = theString
+        histvect=[]
+    
+        for i in theSlicedSurvey:
+            answer = i[stringQ]
+            histvect.append(answer)
+        
+        
+        #plt.hist([float(plotdict[v]) for v in plotdict], bins=range(0, 100, 10), alpha=0.75)
+        print (histvect)
+        plt.hist(histvect,bins=10)
+        plt.title(stringQ)
+    
+        plt.show() 
+    
+        return
+
 def pieplot(theSlicedSurvey, theString):
             
     import matplotlib.pyplot as plt
@@ -163,8 +187,9 @@ print ("PLOTTING!!!!!!")
 
 #barplot(sliceRA,'Which are the categories which better describe your role(s)?')
 
+#histogram(theSurvey,'What is the team size (in number of collaborators) of the initiative?')
 
-#types = ['bar','pie','wcl']
+#types = ['bar','pie','wcl', 'hist']
 #all the plots in total and in HEP and RA projections
 
 fullPlots = {'Which are the categories which better describe your role(s)?':"bar",
@@ -174,11 +199,18 @@ fullPlots = {'Which are the categories which better describe your role(s)?':"bar
              'On behalf of whom are you submitting the survey?':'pie',
              'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
              'Are you (or the initiative you represent) ALSO a user of computing facilities in your scientific activity? (as a researcher+ as a programmer+ as a manager)': 'pie',
-             'Please select your areas of expertise+ for which you can answer technical questions:':'bar'}
+             'Please select your areas of expertise+ for which you can answer technical questions:':'bar',
+             'Which initiative / centre? (for example: The CMS Experiment at CERN or the CINECA HPC Centre)': 'wcl',
+             'What is the team size (in number of collaborators) of the initiative?': 'hist',
+             'Are you (ALSO) manager of an infrastructure? (computing centre+ a federated infrastructure+ a data centre+ ...)': 'pie',
+             'Authentication and Authorization supported method(s) [this includes Workload and Storage management]':'wcl',
+             'Technical solutions supported for AA':'wcl'}
 
 for plot in fullPlots:
     if fullPlots[plot] == 'bar':
         barplot(theSurvey,plot)
+    if fullPlots[plot] == 'hist':
+        histogram(theSurvey,plot)
     if fullPlots[plot] == 'pie':
         pieplot(theSurvey,plot)
     if fullPlots[plot] == 'wcl':
