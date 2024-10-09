@@ -207,7 +207,7 @@ fullPlots = {
 #AAI
     'Authentication and Authorization supported method(s) [this includes Workload and Storage management]':'wcl',
     'Technical solutions supported for AA':'wcl',
-    'Which AA tools do you support or make use of?','wcl',
+    'Which AA tools do you support or make use of?':'wcl',
 
 #over .....
 }
