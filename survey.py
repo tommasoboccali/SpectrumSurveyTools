@@ -192,19 +192,25 @@ print ("PLOTTING!!!!!!")
 #types = ['bar','pie','wcl', 'hist']
 #all the plots in total and in HEP and RA projections
 
-fullPlots = {'Which are the categories which better describe your role(s)?':"bar",
-             'Describe in a few words what is your activity':"bar",
-             'Which is/are your scientific domain(s) of expertise (if applicable)?':"bar",
-             'Describe in a few words what is your activity':"wcl",
-             'On behalf of whom are you submitting the survey?':'pie',
-             'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
-             'Are you (or the initiative you represent) ALSO a user of computing facilities in your scientific activity? (as a researcher+ as a programmer+ as a manager)': 'pie',
-             'Please select your areas of expertise+ for which you can answer technical questions:':'bar',
-             'Which initiative / centre? (for example: The CMS Experiment at CERN or the CINECA HPC Centre)': 'wcl',
-             'What is the team size (in number of collaborators) of the initiative?': 'hist',
-             'Are you (ALSO) manager of an infrastructure? (computing centre+ a federated infrastructure+ a data centre+ ...)': 'pie',
-             'Authentication and Authorization supported method(s) [this includes Workload and Storage management]':'wcl',
-             'Technical solutions supported for AA':'wcl'}
+fullPlots = {
+    'Which are the categories which better describe your role(s)?':"bar",
+    'Describe in a few words what is your activity':"bar",
+    'Which is/are your scientific domain(s) of expertise (if applicable)?':"bar",
+    'Describe in a few words what is your activity':"wcl",
+    'On behalf of whom are you submitting the survey?':'pie',
+    'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
+    'Are you (or the initiative you represent) ALSO a user of computing facilities in your scientific activity? (as a researcher+ as a programmer+ as a manager)': 'pie',
+    'Please select your areas of expertise+ for which you can answer technical questions:':'bar',
+    'Which initiative / centre? (for example: The CMS Experiment at CERN or the CINECA HPC Centre)': 'wcl',
+    'What is the team size (in number of collaborators) of the initiative?': 'hist',
+    'Are you (ALSO) manager of an infrastructure? (computing centre+ a federated infrastructure+ a data centre+ ...)': 'pie',
+#AAI
+    'Authentication and Authorization supported method(s) [this includes Workload and Storage management]':'wcl',
+    'Technical solutions supported for AA':'wcl',
+    'Which AA tools do you support or make use of?','wcl',
+
+#over .....
+}
 
 for plot in fullPlots:
     if fullPlots[plot] == 'bar':
