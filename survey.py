@@ -48,8 +48,9 @@ def pieplot(theSlicedSurvey, theString):
     print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
 
     plt.pie([float(plotdict[v]) for v in plotdict], labels=[str(k) for k in plotdict], autopct='%1.1f%%')
-    plt.show()
+    plt.title(stringQ)
 
+    plt.show() 
 
     return
 
@@ -79,9 +80,10 @@ def barplot(theSlicedSurvey, theString):
 
      
     plt.bar(*zip(*plotdict.items()))
+    plt.title(stringQ)
     plt.xticks(rotation=30, ha='right')
-    plt.show()
 
+    plt.show() 
 
 
 
@@ -106,9 +108,10 @@ def wclplot(theSlicedSurvey, theString):
 
     wordcloud = WordCloud().generate(text)
     plt.imshow(wordcloud, interpolation='bilinear')
+    plt.title(stringQ)      
     plt.axis("off")
-    plt.show()
 
+    plt.show() 
 
     return
 
@@ -154,20 +157,31 @@ print ("PLOTTING!!!!!!")
 #barplot(theSurvey,'Which are the categories which better describe your role(s)?')
 #wclplot(theSurvey,"Describe in a few words what is your activity")
 
-sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
+#sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
 
 #sliced plots
 
-#barplot(sliceRA,'Which are the categories which better describe your role(s)?')
+barplot(sliceRA,'Which are the categories which better describe your role(s)?')
 
 
 #types = ['bar','pie','wcl']
 #all the plots in total and in HEP and RA projections
 
-fullPlots = ['Which are the categories which better describe your role(s)?','Describe in a few words what is your activity':"bar",
-             'Which is/are your scientific domain(s) of expertise (if applicable)?':"bar"
+fullPlots = {'Which are the categories which better describe your role(s)?':"bar",
+             'Describe in a few words what is your activity':"bar",
+             'Which is/are your scientific domain(s) of expertise (if applicable)?':"bar",
              'Describe in a few words what is your activity':"wcl",
              'On behalf of whom are you submitting the survey?':'pie',
              'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
+             'Are you (or the initiative you represent) ALSO a user of computing facilities in your scientific activity? (as a researcher+ as a programmer+ as a manager)': 'pie',
+             'Please select your areas of expertise+ for which you can answer technical questions:':'bar'}
+
+for plot in fullPlots:
+    if fullPlots[plot] == 'bar':
+        barplot(theSurvey,plot)
+    if fullPlots[plot] == 'pie':
+        pieplot(theSurvey,plot)
+    if fullPlots[plot] == 'wcl':
+        wclplot(theSurvey,plot)
 
 
