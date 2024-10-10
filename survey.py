@@ -24,40 +24,32 @@ def slicer(theSurvey, theQuestion, theAnswers):
     return slicedSurvey
 
 
+def dictforbar(theSlicedSurvey, theString):
+    stringQ = theString
+    plotdict = {}
 
-def histogram(theSlicedSurvey, theString):
-                
-        import matplotlib.pyplot as plt
-        import numpy as np
-    
-        # 1 - 'What is the team size (in number of collaborators) of the initiative?'
-    
-        stringQ = theString
-        histvect=[]
-    
-        for i in theSlicedSurvey:
+    for i in theSlicedSurvey:
             answer = i[stringQ]
-            histvect.append(answer)
-        
-        
-        #plt.hist([float(plotdict[v]) for v in plotdict], bins=range(0, 100, 10), alpha=0.75)
-        print (histvect)
-        plt.hist(histvect,bins=10)
-        plt.xticks(rotation=30, ha='right')
+            if answer == "":
+                print ("EMPTY ANSWER", i['\ufeffYour name'])
+#        print ('Answer:',answer)
+            answers = answer.split('; ')
+#        print (answers)
+            for j in answers:
+ #           print (j)
+                if j in plotdict.keys():
+                    plotdict[j]=plotdict[j]+1
+                else:
+                    plotdict[j]=1
 
-        plt.title(stringQ)
-    
-        plt.show() 
-    
-        return
+    if "" in plotdict.keys():
+        plotdict['N/A']=plotdict['']
+        del plotdict['']
+    print ("DICT for the PLOT using Query:",stringQ, "\n",plotdict)     
+    return plotdict
 
-def pieplot(theSlicedSurvey, theString):
-            
-    import matplotlib.pyplot as plt
-    import numpy as np
 
-    # 1 - 'Which are the categories which better describe your role(s)?'
-
+def dictforpie(theSlicedSurvey, theString):
     stringQ = theString
     plotdict = {}
 
@@ -76,9 +68,61 @@ def pieplot(theSlicedSurvey, theString):
         plotdict['N/A']=plotdict['']
         del plotdict['']
     print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
+    return plotdict
+
+def textforwcl(theSlicedSurvey, theString):
+    stringQ = theString
+
+    text = ""
+
+    for i in theSlicedSurvey:
+        answer = i[stringQ]
+        text = text + " "+ str(answer)
+    
+    print ("TEXT for the WORDCLOUD using Query",stringQ,"\n",text)      
+    return text
+
+def vectforhist(theSlicedSurvey, theString):
+    stringQ = theString
+    histvect=[]
+    
+    for i in theSlicedSurvey:
+        answer = i[stringQ]
+        histvect.append(answer)
+    return histvect
+        
+
+def histogram(theSlicedSurvey, theString):
+                
+        import matplotlib.pyplot as plt
+        import numpy as np
+    
+        # 1 - 'What is the team size (in number of collaborators) of the initiative?'
+    
+        histvect = vectforhist(theSlicedSurvey, theString)
+
+        #plt.hist([float(plotdict[v]) for v in plotdict], bins=range(0, 100, 10), alpha=0.75)
+        print (histvect)
+        plt.hist(histvect,bins=10)
+        plt.xticks(rotation=30, ha='right')
+
+        plt.title(theString)
+    
+        plt.show() 
+    
+        return
+
+def pieplot(theSlicedSurvey, theString):
+            
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    # 1 - 'Which are the categories which better describe your role(s)?'
+
+    plotdict=dictforpie(theSlicedSurvey, theString)
 
     plt.pie([float(plotdict[v]) for v in plotdict], labels=[str(k) for k in plotdict], autopct='%1.1f%%')
-    plt.title(stringQ)
+    plt.title(theString)
 
     plt.show() 
 
@@ -92,36 +136,48 @@ def barplot(theSlicedSurvey, theString):
 
     # 1 - 'Which are the categories which better describe your role(s)?'
 
-    stringQ = theString
-    plotdict = {}
-
-    for i in theSlicedSurvey:
-        answer = i[stringQ]
-        if answer == "":
-                print ("EMPTY ANSWER", i['\ufeffYour name'])
-#        print ('Answer:',answer)
-        answers = answer.split('; ')
-#        print (answers)
-        for j in answers:
- #           print (j)
-            if j in plotdict.keys():
-                plotdict[j]=plotdict[j]+1
-            else:
-                plotdict[j]=1
-
-    if "" in plotdict.keys():
-        plotdict['N/A']=plotdict['']
-        del plotdict['']
-    print ("DICT for the PLOT using Query:",stringQ, "\n",plotdict)     
+    plotdict=dictforbar(theSlicedSurvey, theString)
+    print ("DICT for the PLOT using Query:",theString, "\n",plotdict)     
 
      
     plt.bar(*zip(*plotdict.items()))
-    plt.title(stringQ)
+    plt.title(theString)
     plt.xticks(rotation=30, ha='right')
 
     plt.show() 
 
+    return
 
+def barplot2Slices(theSlicedSurvey1, theSlicedSurvey2, theString, title1, title2):
+            
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+
+    plotdict1=dictforbar(theSlicedSurvey1, theString)
+    plotdict2=dictforbar(theSlicedSurvey2, theString)
+
+    fig = make_subplots(rows=1, cols=2)
+
+    x = [key for key in plotdict1.keys()]
+    y = [value for value in plotdict1.values()]
+
+    fig.add_trace(        
+        go.Bar(x=x, y=y),
+        row=1, col=1
+    )
+
+    x2 = [key for key in plotdict2.keys()]   
+    y2 = [value for value in plotdict2.values()]
+
+    fig.add_trace(
+        go.Bar(x=x2, y=y2),
+        row=1, col=2
+    )
+
+    fig.update_layout(height=600, width=800, title_text=(title1+" vs "+title2))
+    fig.update_xaxes(       
+        tickangle = 45)
+    fig.show()
 
     return
 
@@ -131,20 +187,10 @@ def wclplot(theSlicedSurvey, theString):
     from wordcloud import WordCloud
 
     # 1 - 'Which are the categories which better describe your role(s)?'
-
-    stringQ = theString
-
-    text = ""
-
-    for i in theSlicedSurvey:
-        answer = i[stringQ]
-        text = text + " "+ str(answer)
-    
-    print ("TEXT for the WORDCLOUD using Query",stringQ,"\n",text)      
-
+    text=textforwcl(theSlicedSurvey, theString)
     wordcloud = WordCloud().generate(text)
     plt.imshow(wordcloud, interpolation='bilinear')
-    plt.title(stringQ)      
+    plt.title(theString)      
     plt.axis("off")
 
     plt.show() 
@@ -193,7 +239,11 @@ print ("PLOTTING!!!!!!")
 #barplot(theSurvey,'Which are the categories which better describe your role(s)?')
 #wclplot(theSurvey,"Describe in a few words what is your activity")
 
-#sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
+sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
+sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Experimental High Energy Physics (HEP)'])
+
+barplot2Slices(sliceHEP,sliceRA,'Which are the categories which better describe your role(s)?','HEP','RA')
+
 
 #sliced plots
 
