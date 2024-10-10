@@ -11,6 +11,7 @@ def slicer(theSurvey, theQuestion, theAnswers):
 
     slicedSurvey=[]
     for row in theSurvey:
+        print ("ANSWER",row[theQuestion],row[theQuestion].split('; ') )
         answers = row[theQuestion].split('; ')
         print ("the answers in this row",answers)
         for a in theAnswers:
@@ -42,6 +43,8 @@ def histogram(theSlicedSurvey, theString):
         #plt.hist([float(plotdict[v]) for v in plotdict], bins=range(0, 100, 10), alpha=0.75)
         print (histvect)
         plt.hist(histvect,bins=10)
+        plt.xticks(rotation=30, ha='right')
+
         plt.title(stringQ)
     
         plt.show() 
@@ -61,7 +64,7 @@ def pieplot(theSlicedSurvey, theString):
     for i in theSlicedSurvey:
         answer = i[stringQ]
     #    print ('Answer:',answer)
-        answers = answer.split(';')
+        answers = answer.split('; ')
         for j in answers:
  #           print (j)
             if j in plotdict.keys():
@@ -69,6 +72,9 @@ def pieplot(theSlicedSurvey, theString):
             else:
                 plotdict[j]=1
 
+    if "" in plotdict.keys():
+        plotdict['N/A']=plotdict['']
+        del plotdict['']
     print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
 
     plt.pie([float(plotdict[v]) for v in plotdict], labels=[str(k) for k in plotdict], autopct='%1.1f%%')
@@ -91,8 +97,11 @@ def barplot(theSlicedSurvey, theString):
 
     for i in theSlicedSurvey:
         answer = i[stringQ]
-    #    print ('Answer:',answer)
-        answers = answer.split(';')
+        if answer == "":
+                print ("EMPTY ANSWER", i['\ufeffYour name'])
+#        print ('Answer:',answer)
+        answers = answer.split('; ')
+#        print (answers)
         for j in answers:
  #           print (j)
             if j in plotdict.keys():
@@ -100,6 +109,9 @@ def barplot(theSlicedSurvey, theString):
             else:
                 plotdict[j]=1
 
+    if "" in plotdict.keys():
+        plotdict['N/A']=plotdict['']
+        del plotdict['']
     print ("DICT for the PLOT using Query:",stringQ, "\n",plotdict)     
 
      
@@ -126,7 +138,7 @@ def wclplot(theSlicedSurvey, theString):
 
     for i in theSlicedSurvey:
         answer = i[stringQ]
-        text = text + str(answer)
+        text = text + " "+ str(answer)
     
     print ("TEXT for the WORDCLOUD using Query",stringQ,"\n",text)      
 
