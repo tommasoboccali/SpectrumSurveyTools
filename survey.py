@@ -11,13 +11,13 @@ def slicer(theSurvey, theQuestion, theAnswers):
 
     slicedSurvey=[]
     for row in theSurvey:
-        print ("ANSWER",row[theQuestion],row[theQuestion].split('; ') )
+        #print ("ANSWER",row[theQuestion],row[theQuestion].split('; ') )
         answers = row[theQuestion].split('; ')
-        print ("the answers in this row",answers)
+        #print ("the answers in this row",answers)
         for a in theAnswers:
             if a  in answers:
                 slicedSurvey.append(row)
-                print ("MATCHED")
+                #print ("MATCHED")
 
 
     print ("Slicing returned ",len(slicedSurvey)," entries", "out of ",len(theSurvey))
@@ -173,6 +173,92 @@ def barplot(theSlicedSurvey, theString):
 
     return
 
+def tableplot3(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titleall, title1, title2):
+    import plotly.graph_objects as go
+
+    utabdictall = dictfortable(theSliceAll,'Which are the categories which better describe your role(s)?')
+    utabdict1 = dictfortable(theSlicedSurvey1,'Which are the categories which better describe your role(s)?')
+    utabdict2 = dictfortable(theSlicedSurvey2,'Which are the categories which better describe your role(s)?')
+
+    
+    tabdictall = {key: value for key, value in sorted(utabdictall.items())}
+    tabdict1 = {key: value for key, value in sorted(utabdict1.items())}
+    tabdict2 = {key: value for key, value in sorted(utabdict2.items())}
+    
+
+    from plotly.subplots import make_subplots
+
+    limits = [100,20,20]
+
+    fig = make_subplots(
+        rows=1, 
+        cols=3,
+        start_cell="top-left", 
+        specs=[
+            [{"type": "table"}, {"type": "table"}, {"type": "table"}    ]
+            
+        ]
+    )
+
+    x = [key for key in tabdictall.keys()]
+    y = [value for value in tabdictall.values()]
+
+
+    tot=0
+    for i in y:
+        tot+=i
+    f = [str(round(100*i/tot,1))+"%" for i in y]
+    x.append("Total")
+    y.append(tot)
+    f.append("100%")
+
+
+    fig.add_trace(go.Table(columnwidth=limits,header=                           
+        dict(values=[titleall+": "+theString, 'Answers', 'Fraction (%)']),
+        cells=dict(values=[x,y,f])
+    ),row=1, col=1)
+
+#fig 2
+
+    x = [key for key in tabdict1.keys()]
+    y = [value for value in tabdict1.values()]
+
+    tot=0
+    for i in y:
+        tot+=i
+    f = [str(round(100*i/tot,1))+"%" for i in y]
+    x.append("Total")
+    y.append(tot)
+    f.append("100%")
+
+
+    fig.add_trace(go.Table(columnwidth=limits,header=                           
+        dict(values=[title1+": "+theString, 'Answers', 'Fraction (%)']),
+                 cells=dict(values=[x,y,f])
+    ),row=1, col=2)
+
+#fig 3
+
+    x = [key for key in tabdict2.keys()]
+    y = [value for value in tabdict2.values()]
+
+    tot=0
+    for i in y:
+        tot+=i
+    f = [str(round(100*i/tot,1))+"%" for i in y]
+    x.append("Total")
+    y.append(tot)
+    f.append("100%")
+
+
+    fig.add_trace(go.Table(columnwidth=limits,header=                           
+        dict(values=[title2+": "+theString, 'Answers', 'Fraction (%)']),
+                 cells=dict(values=[x,y,f])
+    ),row=1, col=3)
+
+    fig.show()
+
+
 def tableplot(theSlicedSurvey, theString):
     import plotly.graph_objects as go
 
@@ -185,6 +271,9 @@ def tableplot(theSlicedSurvey, theString):
     for i in cellsline:
         tot+=i
     fractions = [str(round(100*i/tot,1))+"%" for i in cellsline]
+    headerline.append("Total")
+    cellsline.append(tot)
+    fractions.append("100%")
 
     print ("CHECK",headerline, cellsline)
     limits = [100,20,20]
@@ -355,21 +444,24 @@ import json
 # start doing easy plots
 #
 
-tableplot(theSurvey,'Which are the categories which better describe your role(s)?')
+#tableplot(theSurvey,'Which are the categories which better describe your role(s)?')
 
-input("Press Enter to continue...")
+sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
+sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Experimental High Energy Physics (HEP)'])
+sliceAll = theSurvey
 
 
 print ("PLOTTING!!!!!!")
+
+tableplot3(theSurvey,sliceHEP,sliceRA,'Which are the categories which better describe your role(s)?','All','HEP', "RA")
+
 
 #full plots
 
 #barplot(theSurvey,'Which are the categories which better describe your role(s)?')
 #wclplot(theSurvey,"Describe in a few words what is your activity")
 
-sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
-sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Experimental High Energy Physics (HEP)'])
-sliceAll = theSurvey
+
 barplot3Slices(sliceAll,sliceHEP,sliceRA, 'Which are the categories which better describe your role(s)?','All','HEP', "RA")
 
 input("Press Enter to continue...")
@@ -384,14 +476,23 @@ input("Press Enter to continue...")
 #all the plots in total and in HEP and RA projections
 
 fullPlots = {
-    'Which are the categories which better describe your role(s)?':"bar",
-    'Describe in a few words what is your activity':"bar",
-    'Which is/are your scientific domain(s) of expertise (if applicable)?':"bar",
+    'Which are the categories which better describe your role(s)?':'table',
     'Describe in a few words what is your activity':"wcl",
+    'Which is/are your scientific domain(s) of expertise (if applicable)?':"table",
+    'On behalf of whom are you submitting the survey?':'pie',
+    
+
+#over .....
+}
+
+allhepraPlots = {
+    'Which are the categories which better describe your role(s)?':'table',
+    'Describe in a few words what is your activity':"wcl",
+    'Which is/are your scientific domain(s) of expertise (if applicable)?':"table",
     'On behalf of whom are you submitting the survey?':'pie',
     'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
     'Are you (or the initiative you represent) ALSO a user of computing facilities in your scientific activity? (as a researcher+ as a programmer+ as a manager)': 'pie',
-    'Please select your areas of expertise+ for which you can answer technical questions:':'bar',
+    'Please select your areas of expertise+ for which you can answer technical questions:':'table',
     'Which initiative / centre? (for example: The CMS Experiment at CERN or the CINECA HPC Centre)': 'wcl',
     'What is the team size (in number of collaborators) of the initiative?': 'hist',
     'Are you (ALSO) manager of an infrastructure? (computing centre+ a federated infrastructure+ a data centre+ ...)': 'pie',
@@ -416,3 +517,8 @@ for plot in fullPlots:
         wclplot(theSurvey,plot)
 
 
+for plot in allhepraPlots:
+    if allhepraPlots[plot] == 'bar':
+        barplot3Slices(sliceAll,sliceHEP,sliceRA,plot,'All','HEP', "RA")
+    if allhepraPlots[plot] == 'table':
+        tableplot3(theSurvey,sliceHEP,sliceRA,plot,'All','HEP', "RA")
