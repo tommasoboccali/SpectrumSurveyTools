@@ -139,12 +139,40 @@ def barplot(theSlicedSurvey, theString):
     plotdict=dictforbar(theSlicedSurvey, theString)
     print ("DICT for the PLOT using Query:",theString, "\n",plotdict)     
 
-     
+    plt.figure(figsize=(10, 30))
     plt.bar(*zip(*plotdict.items()))
     plt.title(theString)
     plt.xticks(rotation=30, ha='right')
 
     plt.show() 
+
+    return
+
+def barplot2(theSlicedSurvey, theString):
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    import numpy as np
+
+    # 1 - 'Which are the categories which better describe your role(s)?'
+
+    plotdict=dictforbar(theSlicedSurvey, theString)
+    print ("DICT for the PLOT using Query:",theString, "\n",plotdict)     
+
+    x = [key for key in plotdict.keys()]   
+    y = [value for value in plotdict.values()]
+
+
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(        
+        go.Bar(x=x, y=y),
+        row=1, col=1
+    )
+
+
+    fig.update_layout(height=600, width=800, title_text=(theString))
+    fig.update_xaxes(       
+        tickangle = 45)
+    fig.show()
 
     return
 
@@ -181,6 +209,52 @@ def barplot2Slices(theSlicedSurvey1, theSlicedSurvey2, theString, title1, title2
 
     return
 
+def barplot3Slices(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titleall, title1, title2):
+            
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+
+    plotdictall=dictforbar(theSliceAll, theString)
+    plotdict1=dictforbar(theSlicedSurvey1, theString)
+    plotdict2=dictforbar(theSlicedSurvey2, theString)
+
+    fig = make_subplots(rows=1, cols=3)
+
+
+    x = [key for key in plotdictall.keys()]
+    y = [value for value in plotdictall.values()]
+
+    fig.add_trace(        
+        go.Bar(x=x, y=y, name=titleall),
+        row=1, col=1
+    )
+
+
+
+    x = [key for key in plotdict1.keys()]
+    y = [value for value in plotdict1.values()]
+
+    fig.add_trace(        
+        go.Bar(x=x, y=y, name=title1),
+        row=1, col=2
+    )
+
+    x2 = [key for key in plotdict2.keys()]   
+    y2 = [value for value in plotdict2.values()]
+
+    fig.add_trace(
+        go.Bar(x=x2, y=y2, name=title2),
+        row=1, col=3
+    )
+
+    fig.update_layout(height=600, width=800, title_text=(titleall+" vs "+title1+" vs "+title2))
+    fig.update_xaxes(       
+        tickangle = 45)
+    fig.show()
+
+    return
+
+
 def wclplot(theSlicedSurvey, theString):
     import matplotlib.pyplot as plt
     import numpy as np
@@ -213,7 +287,9 @@ with open(filename, newline='') as csvfile:
     for row in reader:
 #        for key in row:
 #             print(key, "->", row[key])
-#        print (row['\ufeffYour name'])
+        print (row['\ufeffYour name'])
+        if row['\ufeffYour name'] == "Tomm" or row['\ufeffYour name'] == "test" or row['\ufeffYour name'] == "ewrwe" or row['\ufeffYour name'] == "dsadas":
+            continue
         theSurvey.append    (row)
 
 print ("Finished reading the file, read  entries:"  + str(len(theSurvey)))       
@@ -241,9 +317,10 @@ print ("PLOTTING!!!!!!")
 
 sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
 sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Experimental High Energy Physics (HEP)'])
+sliceAll = theSurvey
+barplot3Slices(sliceAll,sliceHEP,sliceRA, 'Which are the categories which better describe your role(s)?','All','HEP', "RA")
 
-barplot2Slices(sliceHEP,sliceRA,'Which are the categories which better describe your role(s)?','HEP','RA')
-
+input("Press Enter to continue...")
 
 #sliced plots
 
@@ -276,7 +353,7 @@ fullPlots = {
 
 for plot in fullPlots:
     if fullPlots[plot] == 'bar':
-        barplot(theSurvey,plot)
+        barplot2(theSurvey,plot)
     if fullPlots[plot] == 'hist':
         histogram(theSurvey,plot)
     if fullPlots[plot] == 'pie':
