@@ -43,7 +43,6 @@ def dictforbar(theSlicedSurvey, theString):
                     plotdict[j]=1
 
     if "" in plotdict.keys():
-        plotdict['N/A']=plotdict['']
         del plotdict['']
 #    print ("DICT for the PLOT using Query:",stringQ, "\n",plotdict)     
     return plotdict
@@ -65,7 +64,7 @@ def dictforpie(theSlicedSurvey, theString):
                 plotdict[j]=1
 
     if "" in plotdict.keys():
-        plotdict['N/A']=plotdict['']
+ #       plotdict['N/A']=plotdict['']
         del plotdict['']
 #    print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
     return plotdict
@@ -111,7 +110,7 @@ def dictfortable(theSlicedSurvey, theString):
                     plotdict[j]=1
 
     if "" in plotdict.keys():
-        plotdict['N/A']=plotdict['']
+#        plotdict['N/A']=plotdict['']
         del plotdict['']
     print ("DICT for the TABLE using Query:",stringQ, "\n",plotdict)     
     return plotdict
@@ -176,10 +175,9 @@ def barplot(theSlicedSurvey, theString):
 def tableplot3(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titleall, title1, title2):
     import plotly.graph_objects as go
 
-    utabdictall = dictfortable(theSliceAll,'Which are the categories which better describe your role(s)?')
-    utabdict1 = dictfortable(theSlicedSurvey1,'Which are the categories which better describe your role(s)?')
-    utabdict2 = dictfortable(theSlicedSurvey2,'Which are the categories which better describe your role(s)?')
-
+    utabdictall = dictfortable(theSliceAll,theString)
+    utabdict1 = dictfortable(theSlicedSurvey1,theString)
+    utabdict2 = dictfortable(theSlicedSurvey2,theString)
     
     tabdictall = {key: value for key, value in sorted(utabdictall.items())}
     tabdict1 = {key: value for key, value in sorted(utabdict1.items())}
@@ -188,7 +186,7 @@ def tableplot3(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titlea
 
     from plotly.subplots import make_subplots
 
-    limits = [100,20,20]
+    limits = [100,30,30]
 
     fig = make_subplots(
         rows=1, 
@@ -262,7 +260,7 @@ def tableplot3(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titlea
 def tableplot(theSlicedSurvey, theString):
     import plotly.graph_objects as go
 
-    tabdict = dictfortable(theSurvey,'Which are the categories which better describe your role(s)?')
+    tabdict = dictfortable(theSurvey,theString)
 
 
     headerline=list(tabdict.keys())
@@ -276,9 +274,9 @@ def tableplot(theSlicedSurvey, theString):
     fractions.append("100%")
 
     print ("CHECK",headerline, cellsline)
-    limits = [100,20,20]
+    limits = [100,30,30]
     fig = go.Figure(data=[go.Table(columnwidth=limits,header=                           
-        dict(values=['Which are the categories which better describe your role(s)?', 'Answers', 'Fraction (%)']),
+        dict(values=[theString, 'Answers', 'Fraction (%)']),
                  cells=dict(values=[headerline,cellsline,fractions])
     )])
     fig.show()
@@ -453,7 +451,7 @@ sliceAll = theSurvey
 
 print ("PLOTTING!!!!!!")
 
-tableplot3(theSurvey,sliceHEP,sliceRA,'Which are the categories which better describe your role(s)?','All','HEP', "RA")
+#tableplot3(theSurvey,sliceHEP,sliceRA,'Which are the categories which better describe your role(s)?','All','HEP', "RA")
 
 
 #full plots
@@ -462,9 +460,9 @@ tableplot3(theSurvey,sliceHEP,sliceRA,'Which are the categories which better des
 #wclplot(theSurvey,"Describe in a few words what is your activity")
 
 
-barplot3Slices(sliceAll,sliceHEP,sliceRA, 'Which are the categories which better describe your role(s)?','All','HEP', "RA")
+#barplot3Slices(sliceAll,sliceHEP,sliceRA, 'Which are the categories which better describe your role(s)?','All','HEP', "RA")
 
-input("Press Enter to continue...")
+#input("Press Enter to continue...")
 
 #sliced plots
 
@@ -477,29 +475,32 @@ input("Press Enter to continue...")
 
 fullPlots = {
     'Which are the categories which better describe your role(s)?':'table',
-    'Describe in a few words what is your activity':"wcl",
+    #'Describe in a few words what is your activity':"wcl",
     'Which is/are your scientific domain(s) of expertise (if applicable)?':"table",
     'On behalf of whom are you submitting the survey?':'pie',
-    
-
-#over .....
+    'Please select your areas of expertise+ for which you can answer technical questions:':'table',
+    'Are you (ALSO) manager of an infrastructure? (computing centre+ a federated infrastructure+ a data centre+ ...)': 'pie',
+    'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
 }
 
+fullPlots ={
+    'Authentication and Authorization supported method(s) [this includes Workload and Storage management]':'table',
+    'Technical solutions supported for AA':'table',
+    'Which AA tools do you support or make use of?':'table',
+}
+fullPlots={}
+
+#over .....
+
+
 allhepraPlots = {
-    'Which are the categories which better describe your role(s)?':'table',
-    'Describe in a few words what is your activity':"wcl",
-    'Which is/are your scientific domain(s) of expertise (if applicable)?':"table",
-    'On behalf of whom are you submitting the survey?':'pie',
-    'Provide a short name for your initiative / use case / centre (for our indexing) (for example+ data analysis at ATLAS)': 'wcl',
-    'Are you (or the initiative you represent) ALSO a user of computing facilities in your scientific activity? (as a researcher+ as a programmer+ as a manager)': 'pie',
-    'Please select your areas of expertise+ for which you can answer technical questions:':'table',
-    'Which initiative / centre? (for example: The CMS Experiment at CERN or the CINECA HPC Centre)': 'wcl',
-    'What is the team size (in number of collaborators) of the initiative?': 'hist',
-    'Are you (ALSO) manager of an infrastructure? (computing centre+ a federated infrastructure+ a data centre+ ...)': 'pie',
+
 #AAI
-    'Authentication and Authorization supported method(s) [this includes Workload and Storage management]':'wcl',
-    'Technical solutions supported for AA':'wcl',
-    'Which AA tools do you support or make use of?':'wcl',
+
+    'Typical computing access type': 'table',
+    'Typical application type(s)': 'table',
+    'Granularity of job submission': 'table',
+
 
 #over .....
 }
@@ -508,6 +509,7 @@ for plot in fullPlots:
     if fullPlots[plot] == 'bar':
         barplot2(theSurvey,plot)
     if fullPlots[plot] == 'table':
+        print ("PLOT!!!!", plot)
         tableplot(theSurvey,plot)
     if fullPlots[plot] == 'hist':
         histogram(theSurvey,plot)
