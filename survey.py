@@ -45,7 +45,7 @@ def dictforbar(theSlicedSurvey, theString):
     if "" in plotdict.keys():
         plotdict['N/A']=plotdict['']
         del plotdict['']
-    print ("DICT for the PLOT using Query:",stringQ, "\n",plotdict)     
+#    print ("DICT for the PLOT using Query:",stringQ, "\n",plotdict)     
     return plotdict
 
 
@@ -67,7 +67,7 @@ def dictforpie(theSlicedSurvey, theString):
     if "" in plotdict.keys():
         plotdict['N/A']=plotdict['']
         del plotdict['']
-    print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
+#    print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
     return plotdict
 
 def textforwcl(theSlicedSurvey, theString):
@@ -79,7 +79,7 @@ def textforwcl(theSlicedSurvey, theString):
         answer = i[stringQ]
         text = text + " "+ str(answer)
     
-    print ("TEXT for the WORDCLOUD using Query",stringQ,"\n",text)      
+#    print ("TEXT for the WORDCLOUD using Query",stringQ,"\n",text)      
     return text
 
 def vectforhist(theSlicedSurvey, theString):
@@ -91,6 +91,31 @@ def vectforhist(theSlicedSurvey, theString):
         histvect.append(answer)
     return histvect
         
+
+def dictfortable(theSlicedSurvey, theString):
+    stringQ = theString
+    plotdict = {}
+
+    for i in theSlicedSurvey:
+            answer = i[stringQ]
+            if answer == "":
+                print ("EMPTY ANSWER", i['\ufeffYour name'])
+#        print ('Answer:',answer)
+            answers = answer.split('; ')
+#        print (answers)
+            for j in answers:
+ #           print (j)
+                if j in plotdict.keys():
+                    plotdict[j]=plotdict[j]+1
+                else:
+                    plotdict[j]=1
+
+    if "" in plotdict.keys():
+        plotdict['N/A']=plotdict['']
+        del plotdict['']
+    print ("DICT for the TABLE using Query:",stringQ, "\n",plotdict)     
+    return plotdict
+
 
 def histogram(theSlicedSurvey, theString):
                 
@@ -147,6 +172,28 @@ def barplot(theSlicedSurvey, theString):
     plt.show() 
 
     return
+
+def tableplot(theSlicedSurvey, theString):
+    import plotly.graph_objects as go
+
+    tabdict = dictfortable(theSurvey,'Which are the categories which better describe your role(s)?')
+
+
+    headerline=list(tabdict.keys())
+    cellsline=list(tabdict.values())
+    tot=0
+    for i in cellsline:
+        tot+=i
+    fractions = [str(round(100*i/tot,1))+"%" for i in cellsline]
+
+    print ("CHECK",headerline, cellsline)
+    limits = [100,20,20]
+    fig = go.Figure(data=[go.Table(columnwidth=limits,header=                           
+        dict(values=['Which are the categories which better describe your role(s)?', 'Answers', 'Fraction (%)']),
+                 cells=dict(values=[headerline,cellsline,fractions])
+    )])
+    fig.show()
+
 
 def barplot2(theSlicedSurvey, theString):
     from plotly.subplots import make_subplots
@@ -300,13 +347,18 @@ import json
 #    json.dump(theSurvey, f)
 #print ("Finished writing the file")
 
-pp = pprint.PrettyPrinter(indent=4)
+#pp = pprint.PrettyPrinter(indent=4)
 #pp.pprint(theSurvey[0])
         
 
 #
 # start doing easy plots
 #
+
+tableplot(theSurvey,'Which are the categories which better describe your role(s)?')
+
+input("Press Enter to continue...")
+
 
 print ("PLOTTING!!!!!!")
 
@@ -354,6 +406,8 @@ fullPlots = {
 for plot in fullPlots:
     if fullPlots[plot] == 'bar':
         barplot2(theSurvey,plot)
+    if fullPlots[plot] == 'table':
+        tableplot(theSurvey,plot)
     if fullPlots[plot] == 'hist':
         histogram(theSurvey,plot)
     if fullPlots[plot] == 'pie':
