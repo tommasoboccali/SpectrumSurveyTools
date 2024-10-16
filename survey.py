@@ -38,8 +38,8 @@ def dictforbar(theSlicedSurvey, theString):
 
     for i in theSlicedSurvey:
             answer = i[stringQ]
-            if answer == "":
-                print ("EMPTY ANSWER", i['\ufeffYour name'])
+#            if answer == "":
+                #print ("EMPTY ANSWER", i['\ufeffYour name'])
 #        print ('Answer:',answer)
             answers = answer.split('; ')
 #        print (answers)
@@ -105,8 +105,8 @@ def dictfortable(theSlicedSurvey, theString):
 
     for i in theSlicedSurvey:
             answer = i[stringQ]
-            if answer == "":
-                print ("EMPTY ANSWER", i['\ufeffYour name'])
+#            if answer == "":
+#
 #        print ('Answer:',answer)
             answers = answer.split('; ')
 #        print (answers)
@@ -421,13 +421,18 @@ def wclplot(theSlicedSurvey, theString):
 #test to read the very large csv file
 # note the file comes from the excel, after you have changed all the "," to a "+" and removed the first 3 lines
 filename='/Users/tom/Downloads/Content_Export_SPECTRUM-JENA_Survey1_oct09/Export583072tab1CSV.csv'
+#filename='/Users/tom/Downloads/Content_Export_SPECTRUM-JENA_Survey1_oct09/Export2csv.csv'
 headerline=True
 theSurvey=[]
 
 with open(filename, newline='') as csvfile:
     reader = csv.DictReader(csvfile,delimiter=',')
     for row in reader:
+        print ("ROW",row)
+#        if row['Your name'] == "Tomm" or row['Your name'] == "test" or row['Your name'] == "ewrwe" or row['Your name'] == "dsadas":
+#NEEDED FOR FIRST FILE
         if row['\ufeffYour name'] == "Tomm" or row['\ufeffYour name'] == "test" or row['\ufeffYour name'] == "ewrwe" or row['\ufeffYour name'] == "dsadas":
+
             continue
         theSurvey.append    (row)
 
@@ -450,8 +455,10 @@ for i in theSurvey[0].keys():
 
 #tableplot(theSurvey,'Which are the categories which better describe your role(s)?')
 
+#NEEDED FOR FIRST FILE
 sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
 sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Experimental High Energy Physics (HEP)'])
+
 sliceAll = theSurvey
 
 print ("PLOTTING!!!!!!")
@@ -631,11 +638,62 @@ fullPlots = {
                 'How long are typical resource allocations? (project / grant length)' : 'table',
                 'How long can the single processes be executed for?'    : 'table',
                 'Which base system architecture is your centre supporting?' : 'table',
-                
-             
-             }
-allhepraPlots = {}
+                'Which GPGPU architectures are you supporting?' : 'table',
+                'Which is the typical # of physical cores you have per motherboard for the latest hardware procured (exclude HT)' : 'pie',
+                'Which is the typical # of GPUs you have per motherboard for the latest hardware procured' : 'pie',
+                'Which is the typical memory per core you deploy+ in GB? Please note 1 GB = 1 GigaByte' : 'table',
+                'Do your nodes have a local “scratch disk” in GB per core? Please note 1 GB = 1 GigaByte' : 'pie',
+                'Do you have system to system fast intercommunication (MPI+ …)?' : 'pie',
+                'Which type of network connection(s) are available between storage nodes? Please note Gbps = GigaBits per second' : 'pie',
+                'Which type of network connection(s) are available to sources / destinations outside the centre (WAN)? Please note Gbps = GigaBits per second' : 'pie',
+                'Which type of network connection(s) are available between storage and compute nodes? Please note Gbps = GigaBits per second' : 'pue',
+                'Which type(s) of resources does your e-Infrastructure provide today?' : 'pie',
+                'Which routing options are available from your compute nodes? OUTGOING CONNECTIONS' : 'table',
+                'Which routing options are available from your compute nodes? INCOMING CONNECTIONS' : 'table',
+                'Does your centre use / support data management tools to move / access / manage data?' : 'table',
+                'Specify the data management tool(s) your site uses and put a link to its documentation if available?': 'wcl',
+                'How do you manage disk-based storage?' : 'table',
+                'How do you manage tape-based storage?' : 'table',
+                'Protocols to access the storage systems+ from internal hosts (for example compute nodes)':'table',
+                'Protocols to access the storage systems+ from external hosts (for example storage to storage geographical transfers)' : 'table',
+                'Which is the total aggregate capacity for writing to storage in your centre (summed over the storage systems if you have many) - Please note 1 GB = 1 GigaByte' : 'pie',
+                'Which is the total aggregate capacity for reading from storage in your centre (summed over the storage systems if you have many) - Please note 1 GB = 1 GigaByte' : 'pie',
+                'Which of the following features do you support?' : 'table',
+                'Is carbon/energy footprint a relevant factor when designing / operating your centre?' : 'pie',
+                'If yes: how do you address it?' : 'table',
+                'Have you considered deploying more efficient / different architectures in order to improve power optimization?' : 'table',
 
+}
+
+
+
+
+#second file             
+#allhepraPlots = {}
+#fullPlots = {
+#    'Which authorization and authentication methods do you support?' : 'table',
+#    'Which authorization and authentication technical solutions do you support?' : 'table',
+#    'Is your AAI federated via trust networks (edugain+ for example)?' : 'pie',
+#    'Is your centre (also) operating on sensitive data?' : 'pie',
+#    'If yes+ how do you operate it?' : 'table',
+#    'Which quantum emulation stacks are you supporting?' : 'table',
+#    'Which quantum hardware solution have you deployed?' : 'table',
+#    'How do you support access to quantum hardware?' : 'table',#
+#}  
+
+allhepraPlots = {}
+fullPlots = { 
+    'Please quantify the size of your centre Number of CPU cores:Amount':'list',
+    'Please quantify the size of your centre Number of CPU cores:Amount':'list',
+ 'Please quantify the size of your centre Nukber of GPU boards:Amount':'list',
+ 'Please quantify the size of your centre Installed disk (PB) - not including scratch disks on the nodes:Amount':'list',
+'Please quantify the size of your centre Installed tape (PB):Amount':'list',
+'Please quantify the size of your centre Total Power used (including cooling) in MW:Amount':'list',
+'Please quantify the size of your centre Total surface for IT resources in squared meters:Amount':'list',
+'Please quantify the size of your centre (if applicable) Total number of deployable standard racks:Amount':'list',
+
+
+  }
 
 
 for plot in fullPlots:
