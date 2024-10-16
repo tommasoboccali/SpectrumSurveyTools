@@ -24,6 +24,14 @@ def slicer(theSurvey, theQuestion, theAnswers):
     return slicedSurvey
 
 
+def printList(theSurvey,plot):
+    print ("=====Printing list for ", plot)
+    for i in theSurvey:
+        if i[plot] !="":
+         print (i[plot])
+
+
+
 def dictforbar(theSlicedSurvey, theString):
     stringQ = theString
     plotdict = {}
@@ -186,7 +194,7 @@ def tableplot3(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titlea
 
     from plotly.subplots import make_subplots
 
-    limits = [100,30,30]
+    limits = [100,35,35]
 
     fig = make_subplots(
         rows=1, 
@@ -274,7 +282,7 @@ def tableplot(theSlicedSurvey, theString):
     fractions.append("100%")
 
     print ("CHECK",headerline, cellsline)
-    limits = [100,30,30]
+    limits = [100,35,35]
     fig = go.Figure(data=[go.Table(columnwidth=limits,header=                           
         dict(values=[theString, 'Answers', 'Fraction (%)']),
                  cells=dict(values=[headerline,cellsline,fractions])
@@ -419,9 +427,6 @@ theSurvey=[]
 with open(filename, newline='') as csvfile:
     reader = csv.DictReader(csvfile,delimiter=',')
     for row in reader:
-#        for key in row:
-#             print(key, "->", row[key])
-        print (row['\ufeffYour name'])
         if row['\ufeffYour name'] == "Tomm" or row['\ufeffYour name'] == "test" or row['\ufeffYour name'] == "ewrwe" or row['\ufeffYour name'] == "dsadas":
             continue
         theSurvey.append    (row)
@@ -436,7 +441,8 @@ import json
 
 #pp = pprint.PrettyPrinter(indent=4)
 #pp.pprint(theSurvey[0])
-        
+for i in theSurvey[0].keys():
+    print ("KEY",i)
 
 #
 # start doing easy plots
@@ -447,7 +453,6 @@ import json
 sliceRA = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Observational Radio Astronomy (RA)'])
 sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise (if applicable)?',['Experimental High Energy Physics (HEP)'])
 sliceAll = theSurvey
-
 
 print ("PLOTTING!!!!!!")
 
@@ -488,24 +493,155 @@ fullPlots ={
     'Technical solutions supported for AA':'table',
     'Which AA tools do you support or make use of?':'table',
 }
-fullPlots={}
+fullPlots={
+#        'Global CPU needs in core-hours per year (if you have the number in other units+ like node hours/year+ Teraflops/year+ ...+ please specify the unit)': 'list',
+           'Global GPU needs in GPU hours per year (if you know the number in different units+ please specify)': 'list',
+           'On which timescale are these needs evaluated / requested? (for example+ requests are submitted year by year+ every 5 years+ ...)':'pie',
+           'Duration':'pie',
+           'Memory needed per core (if you know the answer per node+ assume ~ 100 core nodes and thus divide by 100) - please note GB = GigaByte':'pie',
+           'Local scratch disk per core (if you know the answer per node+ assume 100 cores nodes+ and divide by 100) - please note GB = GigaByte':'pie',
+           'Network I/O within the centre (if you know the answer per node+ assume 100 cores nodes+ and divide by 100) - please note MB = MegaByte':'pie',
+           'Geographical Network I/O per core (if you know the answer per node+ assume 100 cores nodes+ and divide by 100). This is relevant for example for data downloading from a distant centre before/during the execution+ and data uploading at the end. Please note 1 MB = 1 MegaByte':'pie',
+           
+           
+           }
 
 #over .....
 
+fullPlots = {'Do your processes require access to external (remote) services (data sources+ accounting+ monitoring+ management+. ..)?':'pie',
+             'Please give it a short name (e.g. "reconstruction at CMS") for identification purposes':'wcl',
+             'Memory needed per core (if you know the answer per node+ assume ~ 100 core nodes and thus divide by 100) - please note GB = GigaByte':'pie',
+             'Local scratch disk per core (if you know the answer per node+ assume 100 cores nodes+ and divide by 100) - please note GB = GigaByte':'pie',
+             'Network I/O within the centre (if you know the answer per node+ assume 100 cores nodes+ and divide by 100) - please note MB = MegaByte':'pie',
+             'Geographical Network I/O per core (if you know the answer per node+ assume 100 cores nodes+ and divide by 100). This is relevant for example for data downloading from a distant centre before/during the execution+ and data uploading at the end. Please note 1 MB = 1 MegaByte':'pie',
+           }
 
-allhepraPlots = {
+fullPlots = {'Total expected volume to be handled (including everything: data from instruments+ simulations+ analysis samples) - in PB (PetaBytes)': 'list',
+            'Please specify which formats are you using (for example+ CSV+ XLS+ ROOT+ HDF5+ FITS+ ...)' : 'wcl',
+'How many total files / records are expected in your global storage systems?' : 'pie',
+             'Do you handle data respecting FAIR Principles? (see for example here)' : 'pie',
+             
+             }
+
+
+
+
+
+allhepraPlots = { 'Which facilities are you using?':'table',
 
 #AAI
 
     'Typical computing access type': 'table',
     'Typical application type(s)': 'table',
     'Granularity of job submission': 'table',
+    'Which is (are) the most common current resource allocation pattern(s)?': 'table',
+    'Do you have a higher level Workload Management System (WMS:for example+ an initiative-specific layer handling a distributed computing infrastructure and interactive with lower level SLURM+ HTCondor or similar)?': 'table',
+    'How do you discover available resources?': 'table',    
+    'Access to data while the processes are executing': 'table',
+    
+
 
 
 #over .....
 }
 
+allhepraPlots = {            'Which low level protocols are you using for data ingestion / transfer / access?' : 'table',
+                 'Typical storage solutions' : 'table',
+    'Typical data structures'   : 'table',
+    'Typical file / record size(s) - please note B = Byte' : 'table',
+    'Typical file / record access patterns' : 'table',
+                    'Which policies against data loss do you need?' : 'table',
+             'Needs for data confidentiality / controlled access' : 'table',
+
+
+}
+
+fullPlots = {
+             'Do you need public IPs on the compute nodes?' : 'pie',
+             'If yes+ which is the typical fraction of the overall workflow which can be offloaded to accelerators in %? (for example+ in total fraction of operations or total fraction of the workflow time)': 'list',
+                 'Do you need root access at any point when executing workflows on the compute nodes?' : 'pie',
+
+
+}
+
+allhepraPlots={
+    'Supported base architectures' : 'table',
+    'Supported operating systems' : 'table',
+    'Do you need a local/shared disk to be used as area of work for the process (and scratched afterwards)?' : 'table',
+    'Do you expect to need accelerators / special hardware?' : 'table',
+    'Do you expect to need accelerators / special hardware?':'table',
+    'How would you like to have software made available to you?':'table',
+    'Do you need access to virtualization software?' : 'table',
+    'Network needs on the computing node. Does the node need IP access to/from other nodes?' : 'table',
+    'Do you need particular services to be deployed on special machines in the centre in order to operate? (edge services+ proxies+ connectors …)' : 'table',
+    'Do you need X11/Wayland/VNC/… graphical access to the nodes?' : 'table',
+   
+
+}
+
+fullPlots = {
+#    'Do you rely on licensed tools (commercial compilers+ frameworks+ IDEs+ …) directly or as dependencies? List them' : 'wcl',
+ 'Do you have an agreed software licensing mode?':'pie',
+    'Do you adopt FAIR for software principles? (see for example here)' : 'pie',
+    'How is your initiative releasing software?' : 'pie',
+    'Do you anticipate using other hardware architectures than today? Which ones?' : 'wcl',
+    'How much will your software take advantage of multi-core processors?' : 'pie',
+    'How much will you take advantage if vector/SIMD CPU registers?':'pie',
+    'How much will you take advantage of GPUs/FPGAs?' : 'pie',
+    'Do you have the resources needed to evolve your software as you will need to?' : 'pie',
+
+
+}
+allhepraPlots={
+    'Which are the typical programming languages that you use in your initiative?':'table',
+    'Please list the main software dependencies in your code'   : 'table',
+    'CPU architectures' : 'table',
+    'CPU vectorization' : 'table',
+    'CPU vectorization' : 'table',
+    'GPU Accelerator'   : 'table',
+    'What is the driving force behind the architecture / accelerators decisions?' : 'table',
+    'Do support heterogeneous computing? (executing software on different platforms+ possibly including accelerators)' : 'table',
+    'Do you think that software performance will be an issue for you in the next decade?' : 'table',
+
+
+    
+    }
+
+fullPlots = {
+    'Do people enter your field with the right software skills? (for example+ at undergrad / PhD / PostDoc / Staff levels?)' : 'pie',
+    'Do you feel researchers developing and maintaining software and managing the computing infrastructures receive appropriate recognition in your institution / initiative?' : 'pie',
+}
+
+allhepraPlots = {
+    'Who designs and maintains the software in your initiative? (analysis+ reconstruction+ simulation+ ...)':'table',
+    'Who designs and maintains the computing tools needed by your initiative? (operations+ monitoring+ accounting+ deployment+ WMS and data management+ ...)' : 'table',
+    'On which categories could you get training?' : 'table',
+
+
+
+}
+
+fullPlots = {
+    'Which type(s) of resources does your e-Infrastructure provide today?':'table',
+                'Is the centre part of a larger e-infrastructure?':'table',
+                'Which are the main mechanisms to get access to your infrastructure?' : 'table',
+                'Do you allow users to deploy services on login / edge nodes?' : 'table',
+                'Resource allocation methods' : 'table',
+                'Which access patterns to the system you support?' : 'table',
+                'How long are typical resource allocations? (project / grant length)' : 'table',
+                'How long can the single processes be executed for?'    : 'table',
+                'Which base system architecture is your centre supporting?' : 'table',
+                
+             
+             }
+allhepraPlots = {}
+
+
+
 for plot in fullPlots:
+
+    if fullPlots[plot] == 'list':
+        printList(theSurvey,plot)
     if fullPlots[plot] == 'bar':
         barplot2(theSurvey,plot)
     if fullPlots[plot] == 'table':
