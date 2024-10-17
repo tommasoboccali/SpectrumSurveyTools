@@ -461,6 +461,13 @@ sliceHEP = slicer(theSurvey,'Which is/are your scientific domain(s) of expertise
 
 sliceAll = theSurvey
 
+#sliceMultinode = slicer(theSurvey,'Granularity of job submission',['Multi node'])
+
+#printList(sliceMultinode,'Which is/are your scientific domain(s) of expertise (if applicable)?')
+
+#input("Press Enter to continue...")
+
+
 print ("PLOTTING!!!!!!")
 
 #tableplot3(theSurvey,sliceHEP,sliceRA,'Which are the categories which better describe your role(s)?','All','HEP', "RA")
