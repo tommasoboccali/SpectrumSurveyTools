@@ -421,6 +421,7 @@ def wclplot(theSlicedSurvey, theString):
 #test to read the very large csv file
 # note the file comes from the excel, after you have changed all the "," to a "+" and removed the first 3 lines
 filename='/Users/tom/Downloads/Content_Export_SPECTRUM-JENA_Survey1_oct09/Export583072tab1CSV.csv'
+filename='Export583072tab1CSV.csv'
 #filename='/Users/tom/Downloads/Content_Export_SPECTRUM-JENA_Survey1_oct09/Export2csv.csv'
 headerline=True
 theSurvey=[]

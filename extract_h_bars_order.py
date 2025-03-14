@@ -289,6 +289,19 @@ def tableplot(theSlicedSurvey, theString):
     )])
     fig.show()
 
+def extract_speed_info(item,unit_order):
+    # Check for a recognized unit
+    import re
+    for unit in unit_order:
+        if unit in item:
+            # Extract numeric parts (handles ranges like '10-100' or '< 1')
+            numbers = re.findall(r'\d+', item)
+            # Return tuple (unit order, first number, second number if exists)
+            return (unit_order[unit], int(numbers[0]) if numbers else 0, int(numbers[1]) if len(numbers) > 1 else 0)
+    # If no unit is found, push it to the end
+    return (99, 0, 0)
+
+
 
 def extractBars(theSlicedSurvey, theString):
     import matplotlib.pyplot as plt
@@ -300,6 +313,21 @@ def extractBars(theSlicedSurvey, theString):
     y = [value for value in plotdict.values()]
     #sort x and y on the y values
     #y, x = zip(*sorted(zip(y, x), reverse=True))
+
+    unit_order = {'MB': 1, 'GB': 2, 'TB': 3, "day": 4, "week": 5, "month": 6, "year": 7, "16 - 31": 8,"32 - 64": 9, "thousand":10, "million":11, "billion":12}
+
+    sorted_pairs = sorted(zip(x, y), key=lambda pair: extract_speed_info(pair[0],unit_order),reverse=True)
+
+# Unpack the sorted pairs
+    a_sorted, b_sorted = zip(*sorted_pairs)
+
+# Convert tuples back to lists
+    x = list(a_sorted)
+    y = list(b_sorted)
+
+
+
+
     y_norm = [value/sum(y) for value in y]
     wrapped_x = [ "\n".join(textwrap.wrap(label, width=25)) for label in x ]
 

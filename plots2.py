@@ -2,8 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import textwrap
 if (True):
-    x = ["Yes","No"]   
-    y = [2,9]
+    x = ['>4', '2', '4', '1']
+    y = [3, 1, 5,1]
+    x = ['1', '2', '4', ">4"]
+    x = [">4", "4","2","1"]
+    y = [3,5,1,1]
     y_norm = [value/sum(y) for value in y]
     wrapped_x = [ "\n".join(textwrap.wrap(label, width=25)) for label in x ]
 
@@ -14,7 +17,7 @@ if (True):
     fig, ax = plt.subplots(figsize=(10, 4))
     bars = ax.barh(wrapped_x, y, color='skyblue')
     total = sum(y)
-    tit = "Is your centre (also) operating on sensitive data?".replace('+', ',')
+    tit = "Which is the typical # of GPUs you have per motherboard for the latest hardware procured".replace('+', ',')
 
 # Add annotations for the relative fraction
     for bar, fraction in zip(bars, y_norm):

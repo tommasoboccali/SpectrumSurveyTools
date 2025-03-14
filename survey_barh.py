@@ -74,7 +74,9 @@ def dictforbarH(theSlicedSurvey, theString):
     if "" in plotdict.keys():
  #       plotdict['N/A']=plotdict['']
         del plotdict['']
-#    print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
+    print ("DICT for the PLOT Using Query:",stringQ, "\n", plotdict)      
+# I need to sort it by value
+    plotdict = dict(sorted(plotdict.items(), key=lambda item: item[1], reverse=True))
     return plotdict
 
 def textforwcl(theSlicedSurvey, theString):
