@@ -280,12 +280,40 @@ def tableplot3(theSliceAll,theSlicedSurvey1, theSlicedSurvey2, theString, titlea
 
 import re
 
+
+import re
+
+# Convert time values to days
+def time_to_days(value, unit):
+    if unit.startswith('h'):
+        return value
+    if unit.startswith('day'):
+        return value*24
+    if unit.startswith('month'):
+        return value * 30 *24 
+    if unit.startswith('year'):
+        return value * 365 *24
+    return float('inf')
+
+
 # Extract numeric ranges from the key strings
 def extract_range(key):
     numbers = list(map(int, re.findall(r'\d+', key)))
     if '>' in key:
         return (numbers[0], float('inf'))
     return tuple(numbers)
+
+def extract_speed_info(item,unit_order):
+    # Check for a recognized unit
+    import re
+    for unit in unit_order:
+        if unit in item:
+            # Extract numeric parts (handles ranges like '10-100' or '< 1')
+            numbers = re.findall(r'\d+', item)
+            # Return tuple (unit order, first number, second number if exists)
+            return (unit_order[unit], int(numbers[0]) if numbers else 0, int(numbers[1]) if len(numbers) > 1 else 0)
+    # If no unit is found, push it to the end
+    return (99, 0, 0)
 
 
 
@@ -294,9 +322,11 @@ def tableplot(theSlicedSurvey, theString):
     import plotly.graph_objects as go
 
     tabdict,entries = dictfortable(theSurvey,theString)
+    unit_order = {'h': 1, 'day': 2, 'month': 3, "year": 4}
 
     print ("TABTOB",tabdict)
-    sorted_data = dict(sorted(tabdict.items(), key=lambda item: extract_range(item[0])))
+
+    sorted_data = dict(sorted(tabdict.items(), key=lambda item: extract_speed_info(item[0],unit_order)))
     print("RES",sorted_data)
 
     tabdict = sorted_data
